@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
+
 class ProductController extends Controller
 {
     /**
@@ -15,51 +16,18 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::all();
-        $companies = Company::all();
+        $company = new Company;
 
+        $companies = $company->getLists();
         $keyword = $request->input('keyword');
-        $company = $request->input('company');
-        $query = Product::query();
-        //テーブル結合
-        $query->join('companies', function ($query) use ($request) {
-            $query->on('products.company_id', '=', 'companies.id');
-            });
+        $companyId = $request->input('companyId'); 
 
-        if(!empty($keyword)) {
-            $query->where('product_name', 'LIKE', "%{$keyword}%");
-        }
-        if(!empty($company)) {
-            $query->where('company', 'LIKE', $company);
-        }
-
-
-        $products = product::paginate(5);
-        return view('index', compact('products', 'keyword', 'company', 'companies'))
+        $products = Product::paginate(5);
+        return view('index', compact('products', 'companies', 'keyword'))
         ->with('page_id',request()->page)
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
- 
 
-
-    public function search(Request $request)
-    {
-        //dd($request);
-        $searchWord = $_GET['searchWord'];
-        $companyId = $_GET['companyId'];
-        $products = Product::where('product_name', 'like', "%{$searchWord}%")->get();
-        $companies = Company::where('company_name', $companyId)->get();
-
-        $companies = Company::all()->first();
-
-        if(isset($_GET["companyId"])) {
-            // セレクトボックスで選択された値を受け取る
-            $companyId = $_GET["companyId"];
-        }
-        
-        return view('index', compact('searchWord', 'companyId', 'products', 'companies'));
-        
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -80,29 +48,34 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+       // dd($request);
+        $company = Company::find(1);
+        $products = $company->products;
+    
+        $products = new Product();
+        $products->product_name = $request->input("product_name");
+        $products->company_id = $request->input("company_id");
+        $products->price = $request->input("price");
+        $products->stock = $request->input("stock");
+        $products->comment = $request->input("comment");
+        $products->save();
+
+        $img_path = $request->file('img_path');
+        if($request->hasFile('img_path')){
+            $path = \Storage::put('/public', $img_path);
+            $path = explode('/', $path);
+        }else{
+            $path = null;
+        }
+
         $request->validate([
             'product_name' => 'required',
-            'company' => 'required',
+            'company_id' => 'required',
             'price' => 'required|regex:/^[!-~]+$/',
             'stock' => 'required|regex:/^[!-~]+$/',
             'comment' => 'regex:/^[!-~]+$/',
             ]);
-            
-        $products = new Product();
-        $products->fill($request->all())->save();
-   
-
-        // name属性が'img_path'のinputタグをファイル形式に、画像をpublic/avatarに保存
-        $image_path = $request->file('img_path')->store('public');
-
-        // 上記処理にて保存した画像に名前を付け、userテーブルのthumbnailカラムに、格納
-        $products->img_path = basename($img_path);
-
-        $products->save();
-
         return redirect()->route('index');
-
-
     }
 
     /**
@@ -115,7 +88,6 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         return view('show',compact('product'));
-        //->with('page_id',request()->page_id);
     }
 
     /**
@@ -127,8 +99,8 @@ class ProductController extends Controller
     public function edit($id)
     {
         $companies = Company::all();
-        $product = Product::find($id);
-        return view('edit', compact('product', 'companies'));
+        $products = Product::find($id);
+        return view('edit', compact('products', 'companies'));
     }
 
     /**
@@ -142,14 +114,26 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required',
-            'test_company' => 'required',
+            'company_id' => 'required',
             'price' => 'required|regex:/^[!-~]+$/',
             'stock' => 'required|regex:/^[!-~]+$/',
             'comment' => 'regex:/^[!-~]+$/',
-            ]);   
+            ]); 
 
-        $product = Product::find($id);
-        $products->fill($request->all())->save();
+        $img_path = $request->file('img_path');
+        if($request->hasFile('img_path')){
+            $path = \Storage::put('/public', $img_path);
+            $path = explode('/', $path);
+        }else{
+            $path = null;
+        }
+        $products = Product::find($id);
+        $products->product_name = $request->input("product_name");
+        $products->company_id = $request->input("company_id");
+        $products->price = $request->input("price");
+        $products->stock = $request->input("stock");
+        $products->comment = $request->input("comment");
+        $products->save();
         return redirect()->route('index');
 
     }
@@ -166,4 +150,38 @@ class ProductController extends Controller
         $products->delete();
         return redirect()->route('index');
     }
+
+    public function search(Request $request)
+    {//dd($request);
+
+        //入力される値nameの中身を定義する
+        $keyword = $request->input('keyword'); //商品名の値
+        $companyId = $request->input('companyId'); //カテゴリの値
+
+        $query = Product::query();
+        //商品名が入力された場合、productsテーブルから一致する商品を$queryに代入
+        if (isset($keyword)) {
+            $query->where('product_name', 'like', "%{$keyword}%");
+        }
+        //カテゴリが選択された場合、productsテーブルからcompany_idが一致する商品を$queryに代入
+        if (isset($companyId)) {
+            $query->where('company_id', $companyId);
+        }
+
+        //$queryをcompany_idの昇順に並び替えて$productsに代入
+        $products = $query->orderBy('company_id', 'asc')->paginate(5);
+
+        //companiesテーブルからgetLists();関数でcompany_nameとidを取得する
+        $company = new Company;
+        $companies = $company->getLists();
+
+        return view('index', [
+            'products' => $products,
+            'companies' => $companies,
+            'keyword' => $keyword,
+            'companyId' => $companyId
+        ]);
+    }
 }
+
+   

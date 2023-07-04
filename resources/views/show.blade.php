@@ -29,7 +29,7 @@
       <td>{{ $product->id }}</td>
       <td><img src="{{ asset('/storage/' . $product->img_path) }}"></td>
       <td>{{ $product->product_name }}</td>
-      <td>{{ $product->company_name}}</td>
+      <td>{{ $product->company->company_name }}</td>
       <td>{{ $product->price }}円</td>
       <td>{{ $product->stock }}本</td>
       <td>{{ $product->comment }}</td>

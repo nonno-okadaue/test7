@@ -8,16 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['company_id', 'product_name', 'price', 'stock', 'comment', 'img_path'];
+    protected $fillable = [
+        'company_id', 
+        'product_name', 
+        'price', 
+        'stock', 
+        'comment', 
+        'img_path'
+    ];
 
     public function company() 
     {
-        return $this->belongsTo(Company::class,'company_id');
-    }
-
-    public function getCompanyNameAttribute()
-    {
-        return config('product.'.$this->company_id);
+        return $this->belongsTo('App\Models\Company');
     }
 
         /**

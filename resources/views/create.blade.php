@@ -26,13 +26,15 @@
     </div>
     <div class="col-12 mb-2 mt-2">
       <div class="form-group">
-        <select name="company" class="form-select">
+      <select name="company_id" class="form-select">
           <option>メーカーを選択してください</option>
-          @foreach ($companies as $company)
-          <option value="{{ $company->id }}">{{ $company->company_name}}</option>
+          @foreach ($companies as $companies)
+          <option value="{{ $companies->id }}">{{ $companies->company_name }}</option>
           @endforeach
         </select>
-
+        @error('company_id')
+        <span style="color:red;">メーカーを選択してください</span>
+        @enderror
       </div>
     </div>
     <div class="col-12 mb-2 mt-2">
