@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Company;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    private $company;
+    
+    public function __construct()
+    {
+        $this->company = new Company();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -46,37 +54,20 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-       // dd($request);
-        $company = Company::find(1);
-        $products = $company->products;
-    
-        $products = new Product();
-        $products->product_name = $request->input("product_name");
-        $products->company_id = $request->input("company_id");
-        $products->price = $request->input("price");
-        $products->stock = $request->input("stock");
-        $products->comment = $request->input("comment");
-        $products->save();
+        DB::beginTransaction();
 
-        $img_path = $request->file('img_path');
-        if($request->hasFile('img_path')){
-            $path = \Storage::put('/public', $img_path);
-            $path = explode('/', $path);
-        }else{
-            $path = null;
+        try {
+            $model = new Product();
+            $model->registProduct($request);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back();
         }
-
-        $request->validate([
-            'product_name' => 'required',
-            'company_id' => 'required',
-            'price' => 'required|regex:/^[!-~]+$/',
-            'stock' => 'required|regex:/^[!-~]+$/',
-            'comment' => 'regex:/^[!-~]+$/',
-            ]);
-        return redirect()->route('index');
-    }
+            return redirect()->route('index');
+        }
 
     /**
      * Display the specified resource.
@@ -110,30 +101,18 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        $request->validate([
-            'product_name' => 'required',
-            'company_id' => 'required',
-            'price' => 'required|regex:/^[!-~]+$/',
-            'stock' => 'required|regex:/^[!-~]+$/',
-            'comment' => 'regex:/^[!-~]+$/',
-            ]); 
+        DB::beginTransaction();
 
-        $img_path = $request->file('img_path');
-        if($request->hasFile('img_path')){
-            $path = \Storage::put('/public', $img_path);
-            $path = explode('/', $path);
-        }else{
-            $path = null;
+        try {
+            $model = Product();
+            $model->updateProduct($request);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back();
         }
-        $products = Product::find($id);
-        $products->product_name = $request->input("product_name");
-        $products->company_id = $request->input("company_id");
-        $products->price = $request->input("price");
-        $products->stock = $request->input("stock");
-        $products->comment = $request->input("comment");
-        $products->save();
         return redirect()->route('index');
 
     }
@@ -152,26 +131,20 @@ class ProductController extends Controller
     }
 
     public function search(Request $request)
-    {//dd($request);
-
-        //入力される値nameの中身を定義する
-        $keyword = $request->input('keyword'); //商品名の値
-        $companyId = $request->input('companyId'); //カテゴリの値
+    {
+        $keyword = $request->input('keyword'); 
+        $companyId = $request->input('companyId'); 
 
         $query = Product::query();
-        //商品名が入力された場合、productsテーブルから一致する商品を$queryに代入
+
         if (isset($keyword)) {
             $query->where('product_name', 'like', "%{$keyword}%");
         }
-        //カテゴリが選択された場合、productsテーブルからcompany_idが一致する商品を$queryに代入
         if (isset($companyId)) {
             $query->where('company_id', $companyId);
         }
-
-        //$queryをcompany_idの昇順に並び替えて$productsに代入
         $products = $query->orderBy('company_id', 'asc')->paginate(5);
 
-        //companiesテーブルからgetLists();関数でcompany_nameとidを取得する
         $company = new Company;
         $companies = $company->getLists();
 
@@ -182,6 +155,7 @@ class ProductController extends Controller
             'companyId' => $companyId
         ]);
     }
+    
 }
 
    

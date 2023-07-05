@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -21,13 +22,19 @@ class Product extends Model
     {
         return $this->belongsTo('App\Models\Company');
     }
-
-        /**
-     * 更新処理
-     */
-    public function updateProduct($request, $product)
-    {
-        $result = $product->fill($request->all())->save();
-        return $result;
+    public function registProduct($data) {
+        // 登録処理
+        DB::table('products')->insert([
+            'product_name' => $data->product_name,
+            'company_id' => $data->company_id,
+            'price' => $data->price,
+            'stock' => $data->stock,
+            'comment' => $data->comment,
+        ]);
     }
+    
+
+    
+
+
 }

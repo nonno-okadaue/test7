@@ -27,41 +27,40 @@
   <div class="col-12 mb-2 mt-2">
       <div class="form-group">
         <input type="text" value="{{ $products->product_name }}" name="product_name" class="form-control" placeholder="商品名">
-        @error('product_name')
-        <span style="color:red;">商品名を入力してください</span>
-        @enderror
+        @if($errors->has('product_name'))
+        <p style="color:red;">{{ $errors->first('product_name') }}</p>
+        @endif
       </div>
     </div>
 
     <div class="col-12 mb-2 mt-2">
       <div class="form-group">
         <select name="company_id" class="form-select">
-          <option>メーカーを選択してください</option>
-          @foreach ($companies as $companies)
-          <option value="{{ $companies->id }}">{{ $companies->company_name }}</option>
+          @foreach ($companies as $company)
+          <option value="{{ $products->company_id }}">{{ $company->company_name }}</option>
           @endforeach
         </select>
-        @error('company_id')
-        <span style="color:red;">メーカーを選択してください</span>
-        @enderror
+        @if($errors->has('company_id'))
+        <p style="color:red;">{{ $errors->first('company_id') }}</p>
+        @endif
       </div>
     </div>
 
     <div class="col-12 mb-2 mt-2">
       <div class="form-group">
         <input type="text" name="price" value="{{ $products->price }}" class="form-control" placeholder="価格">
-        @error('price')
-        <span style="color:red;">価格を数値で入力してください</span>
-        @enderror
+        @if($errors->has('price'))
+        <p style="color:red;">{{ $errors->first('price') }}</p>
+        @endif
       </div>
     </div>  
 
     <div class="col-12 mb-2 mt-2">
       <div class="form-group">
         <input type="text" name="stock" value="{{ $products->stock }}" class="form-control" placeholder="在庫数">
-        @error('stock')
-        <span style="color:red;">在庫数を数値で入力してください</span>
-        @enderror
+        @if($errors->has('stock'))
+        <p style="color:red;">{{ $errors->first('stock') }}</p>
+        @endif
       </div>
     </div> 
 
