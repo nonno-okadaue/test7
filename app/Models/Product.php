@@ -15,7 +15,9 @@ class Product extends Model
         'price', 
         'stock', 
         'comment', 
-        'img_path'
+        'img_path',
+        'created_at',
+        'updated_at'
     ];
 
     public function company() 
@@ -23,29 +25,9 @@ class Product extends Model
         return $this->belongsTo('App\Models\Company');
     }
 
-    public function create($request) {
-        // 登録処理
-
-        $img_path = $request->file('img_path');
-        $img_name = $img_path ->getClientOriginalName();
-        if($request->hasFile('img_path')){
-            $path = \Storage::put('/public', $img_path);
-            $path = explode('/', $path);
-        }else{
-            $path = null;
-        }
-        DB::table('products')->insert([
-            'product_name' => $request->product_name,
-            'company_id' => $request->company_id,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'comment' => $request->comment,
-            'img_path' => $request->img_path,
-        ]);
-
-    }
+}
 
     
 
 
-}
+

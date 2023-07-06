@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**private $company;
-    
-    public function __construct()
-    {
-        $this->company = new Company();
-    }**/
 
     /**
      * Display a listing of the resource.
@@ -36,7 +30,6 @@ class ProductController extends Controller
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -52,25 +45,54 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function store(ProductRequest $request)
+    {//dd($request);
+
+        $img = $request->file('img_path');
+        $path = $img->store('img','public');
+
+        $product = new Product();
+        $product->create([  
+            "product_name" => $request->product_name, 
+            'company_id' => $request->company_id,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'comment' => $request->comment, 
+            'img_path' => $path,
+        ]);  
+
+        return redirect()->route('index');
+
+        }
+
+    public function search(Request $request)
     {
+        $keyword = $request->input('keyword'); 
+        $companyId = $request->input('companyId'); 
 
-        DB::beginTransaction();
+        $query = Product::query();
 
-        try {
-            $model = new Product();
-            $model->create($request);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back();
+        if (isset($keyword)) {
+            $query->where('product_name', 'like', "%{$keyword}%");
         }
-
-            return redirect()->route('index');
+        if (isset($companyId)) {
+            $query->where('company_id', $companyId);
         }
+        $products = $query->orderBy('company_id', 'asc')->paginate(5);
 
+        $company = new Company;
+        $companies = $company->getLists();
+
+        return view('index', [
+            'products' => $products,
+            'companies' => $companies,
+            'keyword' => $keyword,
+            'companyId' => $companyId
+        ]);
+    }
     /**
      * Display the specified resource.
      *
@@ -103,9 +125,8 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-
+    public function update(ProductRequest $request, $id)
+    {//dd($request);
         $product = Product::find($id);  
         $product->update([  
             "product_name" => $request->product_name, 
@@ -137,32 +158,6 @@ class ProductController extends Controller
         $products = Product::find($id);
         $products->delete();
         return redirect()->route('index');
-    }
-
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword'); 
-        $companyId = $request->input('companyId'); 
-
-        $query = Product::query();
-
-        if (isset($keyword)) {
-            $query->where('product_name', 'like', "%{$keyword}%");
-        }
-        if (isset($companyId)) {
-            $query->where('company_id', $companyId);
-        }
-        $products = $query->orderBy('company_id', 'asc')->paginate(5);
-
-        $company = new Company;
-        $companies = $company->getLists();
-
-        return view('index', [
-            'products' => $products,
-            'companies' => $companies,
-            'keyword' => $keyword,
-            'companyId' => $companyId
-        ]);
     }
     
 }
