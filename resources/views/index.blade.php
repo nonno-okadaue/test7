@@ -20,13 +20,13 @@
             <div class="form-group row">
 
               <div>
-                <label for="" class="col-sm-auto col-form-label">キーワード
+                <label class="col-sm-auto col-form-label">キーワード
                   <div><input type="text" name="keyword" value="{{ $keyword }}"></div>
                 </label>
               </div>
 
               <div>
-                <label for="" class="col-sm-auto col-form-label">会社名
+                <label class="col-sm-auto col-form-label">会社名
                   <div><select name="companyId" data-toggle="select" class="form-control" value=""></div>
                     @foreach ($companies as $id => $company_name)
                     <option value="{{ $id }}">{{ $company_name }}</option>
@@ -61,7 +61,7 @@
           @foreach($products as $product)
           <tr>
             <td style="text-align:right">{{ $product->id }}</td>
-            <td><img src="{{asset('/storage/' . $product->img_path)}}" style="text-align:left"></td>
+            <td><img src="{{asset('storage/' . $product->img_path)}}" style="text-align:left"></td>
             <td>{{ $product->product_name }}</td>
             <td style="text-align:right">{{ $product->price }}円</td>
             <td style="text-align:right">{{ $product->stock }}本</td>

@@ -22,17 +22,28 @@ class Product extends Model
     {
         return $this->belongsTo('App\Models\Company');
     }
-    public function registProduct($data) {
+
+    public function create($request) {
         // 登録処理
+
+        $img_path = $request->file('img_path');
+        $img_name = $img_path ->getClientOriginalName();
+        if($request->hasFile('img_path')){
+            $path = \Storage::put('/public', $img_path);
+            $path = explode('/', $path);
+        }else{
+            $path = null;
+        }
         DB::table('products')->insert([
-            'product_name' => $data->product_name,
-            'company_id' => $data->company_id,
-            'price' => $data->price,
-            'stock' => $data->stock,
-            'comment' => $data->comment,
+            'product_name' => $request->product_name,
+            'company_id' => $request->company_id,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'comment' => $request->comment,
+            'img_path' => $request->img_path,
         ]);
+
     }
-    
 
     
 

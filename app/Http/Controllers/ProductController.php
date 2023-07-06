@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    private $company;
+    /**private $company;
     
     public function __construct()
     {
         $this->company = new Company();
-    }
+    }**/
 
     /**
      * Display a listing of the resource.
@@ -56,16 +56,18 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+
         DB::beginTransaction();
 
         try {
             $model = new Product();
-            $model->registProduct($request);
+            $model->create($request);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return back();
         }
+
             return redirect()->route('index');
         }
 
@@ -101,20 +103,27 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        DB::beginTransaction();
 
-        try {
-            $model = Product();
-            $model->updateProduct($request);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back();
+        $product = Product::find($id);  
+        $product->update([  
+            "product_name" => $request->product_name, 
+            'company_id' => $request->company_id,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'comment' => $request->comment, 
+            'img_path' => $request->img_path, 
+        ]);  
+
+        $img_path = $request->file('img_path');
+        if($request->hasFile('img_path')){
+            $path = \Storage::put('/public', $img_path);
+            $path = explode('/', $path);
+        }else{
+            $path = null;
         }
         return redirect()->route('index');
-
     }
 
     /**

@@ -31,7 +31,6 @@ class ProductRequest extends FormRequest
             'comment' => 'regex:/^[!-~]+$/',
             ];
     }
-
     /**
      * 項目名
      *
@@ -47,7 +46,6 @@ class ProductRequest extends FormRequest
             'comment' => 'コメント',
         ];
     }
-
     /**
      * エラーメッセージ
      *

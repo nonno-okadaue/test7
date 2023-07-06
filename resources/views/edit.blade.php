@@ -21,8 +21,8 @@
  
 <div style="text-align:right;">
 <form action="{{ route('update', $products->id) }}" method="POST">
-@csrf  
 @method('PUT')
+@csrf  
   <div class="row">
   <div class="col-12 mb-2 mt-2">
       <div class="form-group">
@@ -72,7 +72,7 @@
 
     <div class="col-12 mb-2 mt-2">
       <div class="form-group">
-        <label for="image">{{ asset('/storage/' . $products->img_path) }}</label>
+        <label for="img_path">{{ $products->img_path }}</label>
         <input type="file" name="img_path" value="{{ $products->img_path }}" class="form-control-file" >
       </div>
     </div>

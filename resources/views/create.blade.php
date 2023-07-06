@@ -60,7 +60,7 @@
     </div>
     <div class="col-12 mb-2 mt-2">
       <div class="form-group">
-      <label for="image"></label> 
+      <label for="img_path"></label> 
         <input type="file" name="img_path" class="form-control-file">
       </div>
     </div>
