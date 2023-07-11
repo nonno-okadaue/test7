@@ -15,7 +15,6 @@
       <div class="search">
         <div class="col-sm">
           <form method="get" action="{{ route('search')}}">
-        
             <!--入力-->
             <div class="form-group row">
 
@@ -28,6 +27,7 @@
               <div>
                 <label class="col-sm-auto col-form-label">会社名
                   <div><select name="companyId" data-toggle="select" class="form-control" value=""></div>
+                  <option selected="selected" value=""></option>
                     @foreach ($companies as $id => $company_name)
                     <option value="{{ $id }}">{{ $company_name }}</option>
                     @endforeach

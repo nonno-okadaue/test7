@@ -50,30 +50,39 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {//dd($request);
-
         $img = $request->file('img_path');
-        $path = $img->store('img','public');
-
-        $product = new Product();
-        $product->create([  
-            "product_name" => $request->product_name, 
-            'company_id' => $request->company_id,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'comment' => $request->comment, 
-            'img_path' => $path,
-        ]);  
-
+        try {
+			DB::beginTransaction();
+            if (isset($img)) {
+                $path = $img->store('img','public');
+                Product::create([
+                    "product_name" => $request->product_name, 
+                    'company_id' => $request->company_id,
+                    'price' => $request->price,
+                    'stock' => $request->stock,
+                    'comment' => $request->comment, 
+                    'img_path' => $path,
+                ]);
+                }else{
+                $product = new Product();
+                $product->fill($request->all())->save();
+            }
+			DB::commit();
+		} catch (Throwable $e) {
+			DB::rollBack();
+		}
         return redirect()->route('index');
-
         }
 
+
     public function search(Request $request)
-    {
+    {//dd($request);
         $keyword = $request->input('keyword'); 
         $companyId = $request->input('companyId'); 
 
         $query = Product::query();
+        $company = new Company;
+        $companies = $company->getLists();
 
         if (isset($keyword)) {
             $query->where('product_name', 'like', "%{$keyword}%");
@@ -82,9 +91,6 @@ class ProductController extends Controller
             $query->where('company_id', $companyId);
         }
         $products = $query->orderBy('company_id', 'asc')->paginate(5);
-
-        $company = new Company;
-        $companies = $company->getLists();
 
         return view('index', [
             'products' => $products,
@@ -126,26 +132,25 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(ProductRequest $request, $id)
-    {//dd($request);
-        $product = Product::find($id);  
-        $product->update([  
-            "product_name" => $request->product_name, 
-            'company_id' => $request->company_id,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'comment' => $request->comment, 
-            'img_path' => $request->img_path, 
-        ]);  
-
-        $img_path = $request->file('img_path');
-        if($request->hasFile('img_path')){
-            $path = \Storage::put('/public', $img_path);
-            $path = explode('/', $path);
-        }else{
-            $path = null;
-        }
+        {//dd($request);
+            $product = Product::find($id);
+            $img_path = $request->file('img_path');
+            try {
+                DB::beginTransaction();
+            if($request->hasFile('img_path')){
+                $path = \Storage::put('/public', $img_path);
+                $path = explode('/', $path);
+            }else{
+                $path = null;
+                $product->fill($request->all())->save();
+            }  
+            DB::commit();
+		} catch (Throwable $e) {
+			DB::rollBack();
+		}
         return redirect()->route('index');
-    }
+        }
+
 
     /**
      * Remove the specified resource from storage.
@@ -156,7 +161,13 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $products = Product::find($id);
-        $products->delete();
+        try {
+			DB::beginTransaction();
+			$products->delete();
+			DB::commit();
+		} catch (Throwable $e) {
+			DB::rollBack();
+		}
         return redirect()->route('index');
     }
     
