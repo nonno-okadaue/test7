@@ -134,22 +134,25 @@ class ProductController extends Controller
     public function update(ProductRequest $request, $id)
         {//dd($request);
             $product = Product::find($id);
-            $img_path = $request->file('img_path');
             try {
                 DB::beginTransaction();
-            if($request->hasFile('img_path')){
-                $path = \Storage::put('/public', $img_path);
-                $path = explode('/', $path);
-            }else{
+                if($request->hasFile('img_path')){
+                    $original = request()->file('img_path')->getClientOriginalName();
+                    $name = date('Ymd_His').'_'.$original;
+                    request()->file('img_path')->move('storage',$name);
+                    $product->img_path = $name;
+                $product->save();                
+                }else{
                 $path = null;
                 $product->fill($request->all())->save();
-            }  
+                }
             DB::commit();
-		} catch (Throwable $e) {
-			DB::rollBack();
-		}
+        } catch (Throwable $e) {
+            DB::rollBack();
+        }
         return redirect()->route('index');
         }
+        
 
 
     /**

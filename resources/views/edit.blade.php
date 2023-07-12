@@ -20,9 +20,11 @@
 </table>
  
 <div style="text-align:right;">
-<form action="{{ route('update', $products->id) }}" method="POST">
+<form action="{{ route('update', $products->id) }}" method="POST" enctype="multipart/form-data">
 @method('PUT')
 @csrf  
+
+
   <div class="row">
   <div class="col-12 mb-2 mt-2">
       <div class="form-group">
