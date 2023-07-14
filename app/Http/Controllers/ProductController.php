@@ -16,7 +16,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, Product $product)
     {
         $company = new Company;
 
@@ -24,7 +24,7 @@ class ProductController extends Controller
         $keyword = $request->input('keyword');
         $companyId = $request->input('companyId'); 
 
-        $products = Product::paginate(5);
+        $products = $product->index();
         return view('index', compact('products', 'companies', 'keyword'))
         ->with('page_id',request()->page)
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -35,9 +35,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, Company $Company)
     {
-        $companies = Company::all();
+        $company = new Company;
+        $companies = $company->createCompany();
         return view('create', compact('companies'));
     }
 
@@ -55,14 +56,10 @@ class ProductController extends Controller
 			DB::beginTransaction();
             if (isset($img)) {
                 $path = $img->store('img','public');
-                Product::create([
-                    "product_name" => $request->product_name, 
-                    'company_id' => $request->company_id,
-                    'price' => $request->price,
-                    'stock' => $request->stock,
-                    'comment' => $request->comment, 
-                    'img_path' => $path,
-                ]);
+
+                $model = new Product(); 
+                $model -> storeProducts($request); 
+
                 }else{
                 $product = new Product();
                 $product->fill($request->all())->save();
@@ -74,31 +71,31 @@ class ProductController extends Controller
         return redirect()->route('index');
         }
 
-
-    public function search(Request $request)
-    {//dd($request);
-        $keyword = $request->input('keyword'); 
-        $companyId = $request->input('companyId'); 
-
-        $query = Product::query();
-        $company = new Company;
-        $companies = $company->getLists();
-
-        if (isset($keyword)) {
-            $query->where('product_name', 'like', "%{$keyword}%");
+        
+        public function search(Request $request)
+        {//dd($request);
+            $keyword = $request->input('keyword'); 
+            $companyId = $request->input('companyId'); 
+    
+            $query = Product::query();
+            $company = new Company;
+            $companies = $company->getLists();
+    
+            if (isset($keyword)) {
+                $query->where('product_name', 'like', "%{$keyword}%");
+            }
+            if ($companyId) {
+                $query->where('company_id', $companyId);
+            }
+            $products = $query->orderBy('company_id', 'asc')->paginate(5);
+    
+            return view('index', [
+                'products' => $products,
+                'companies' => $companies,
+                'keyword' => $keyword,
+                'companyId' => $companyId
+            ]);
         }
-        if (isset($companyId)) {
-            $query->where('company_id', $companyId);
-        }
-        $products = $query->orderBy('company_id', 'asc')->paginate(5);
-
-        return view('index', [
-            'products' => $products,
-            'companies' => $companies,
-            'keyword' => $keyword,
-            'companyId' => $companyId
-        ]);
-    }
     /**
      * Display the specified resource.
      *

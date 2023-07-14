@@ -38,4 +38,13 @@ class Company extends Model
     {
         return $this->all();
     }
+
+    public function createCompany()
+    {
+        return $this->all();
+    }
+
+
+
+    
 }

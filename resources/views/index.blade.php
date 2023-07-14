@@ -19,21 +19,20 @@
             <div class="form-group row">
 
               <div>
-                <label class="col-sm-auto col-form-label">キーワード
+                <label class="col-sm-auto col-form-label">キーワード</label>
                   <div><input type="text" name="keyword" value="{{ $keyword }}"></div>
-                </label>
               </div>
-
+            
               <div>
-                <label class="col-sm-auto col-form-label">会社名
-                  <div><select name="companyId" data-toggle="select" class="form-control" value=""></div>
-                  <option selected="selected" value=""></option>
+                <label class="col-sm-auto col-form-label">会社名</label>
+                  <div>
+                    <select name="companyId" data-toggle="select" class="form-control" value=""></div>
+                    <option selected="selected" value="">指定なし</option>
                     @foreach ($companies as $id => $company_name)
                     <option value="{{ $id }}">{{ $company_name }}</option>
                     @endforeach
-                      </select>
+                    </select>
                   </div>
-                </label>
               </div>
            
               <div class="col-sm-auto btn">
