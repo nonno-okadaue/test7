@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\Company;
 
 class Product extends Model
 {
@@ -19,6 +20,11 @@ class Product extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function sale()
+    {
+        return $this->hasMany('App\Models\Sale');
+    }
 
     public function company() 
     {
@@ -48,7 +54,26 @@ class Product extends Model
          'img_path' => $path,
          
         ]); } 
-    
+        public function search($keyword,$companyId,$kagenprice,$jougenprice,$kagenstock,$jougenstock)
+        {
+        // 検索処理
+        $products = DB::query();
+
+        $products= DB::table('products')
+        ->join('companies','company_id','=','companies.id')
+        ->select('products.price','companies.company_name');
+
+
+
+
+        
+
+        $product= $products->get();
+
+        return $product;
+      
+          
+        }
     
     
     

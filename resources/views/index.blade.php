@@ -34,9 +34,39 @@
                     </select>
                   </div>
               </div>
-           
+
+              <div>
+                <label for="price" class="col-sm-auto col-form-label">価格</label>
+
+                <div class="jougen">
+                <p>上限</p>
+                <input type="number" name="jougenprice" id="jougenprice" >
+                </div>
+
+                <div class="kagen">
+                <p>下限</p>
+                <input type="number" name="kagenprice" id="kagenprice" >
+                </div>
+
+              </div>
+
+              <div>
+              <label for="stock" class="col-sm-auto col-form-label">在庫数</label>
+
+                <div class="jougen">
+                <p>上限</p>
+                <input type="number" name="jougenstock" id="jougenstock" >
+                </div>
+
+                <div class="kagen">
+                <p>下限</p>
+                <input type="number" name="kagenstock" id="kagenstock" >
+                </div>
+
+              </div>
+       
               <div class="col-sm-auto btn">
-                <button type="submit" class="btn btn-primary ">検索</button>
+                <button type="submit" class="btn btn-primary" id="search">検索</button>
               </div>
             </div>
           </form>
@@ -78,5 +108,20 @@
           </table>
           {!! $products->links('pagination::bootstrap-5') !!}
           
-      
+          <script>
+            $(function() {
+            $("#search").click(function(){
+              $.ajax({
+              type:"GET",
+              url:"{{ route('index') }}",
+              })   
+              .done(function(){
+                alert('ajax成功');
+              })
+              .fail(function(){
+                alert('ajax失敗');
+              })
+            });
+          }); 
+          </script>
           @endsection

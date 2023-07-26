@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -23,11 +22,25 @@ class ProductController extends Controller
         $companies = $company->getLists();
         $keyword = $request->input('keyword');
         $companyId = $request->input('companyId'); 
-
+        $keyword = $request->input('keyword');
+        $search = $request->input('search');
+        $jougenprice = $request->input('jougenprice');
+        $kagenprice = $request->input('kagenprice');
+        $jougenstock = $request->input('jougenstock');
+        $kagenstock = $request->input('kagenstock');
+        
         $products = $product->index();
-        return view('index', compact('products', 'companies', 'keyword'))
+        return view('index', compact(
+            'products',
+            'companies', 
+            'keyword',
+            'jougenprice',
+            'kagenprice',
+            'jougenstock',
+            'kagenstock'))
         ->with('page_id',request()->page)
         ->with('i', (request()->input('page', 1) - 1) * 5);
+  
     }
 
     /**
@@ -53,7 +66,7 @@ class ProductController extends Controller
     {//dd($request);
         $img = $request->file('img_path');
         try {
-			DB::beginTransaction();
+            DB::beginTransaction();
             if (isset($img)) {
                 $path = $img->store('img','public');
 
@@ -64,10 +77,10 @@ class ProductController extends Controller
                 $product = new Product();
                 $product->fill($request->all())->save();
             }
-			DB::commit();
-		} catch (Throwable $e) {
-			DB::rollBack();
-		}
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+        }
         return redirect()->route('index');
         }
 
@@ -76,6 +89,10 @@ class ProductController extends Controller
         {//dd($request);
             $keyword = $request->input('keyword'); 
             $companyId = $request->input('companyId'); 
+            $jougenprice = $request->input('jougenprice'); 
+            $kagenprice = $request->input('kagenprice'); 
+            $jougenstock = $request->input('jougenstock'); 
+            $kagenstock = $request->input('kagenstock'); 
     
             $query = Product::query();
             $company = new Company;
@@ -87,15 +104,36 @@ class ProductController extends Controller
             if ($companyId) {
                 $query->where('company_id', $companyId);
             }
-            $products = $query->orderBy('company_id', 'asc')->paginate(5);
+            if($jougenprice){
+                $query->where('price','<=',$jougenprice);
+            }
+            if($kagenprice){
+                $query->where('price','>=',$kagenprice);
+            }
+            if($jougenstock){
+                $query->where('stock','<=',$jougenstock);
+            }
+            if($kagenstock){
+                $query->where('stock','>=',$kagenstock);
+            }
     
+
+            $products = $query->orderBy('company_id', 'asc')
+            ->orderBy('price', 'asc')
+            ->orderBy('stock', 'asc')
+            ->paginate(5);
             return view('index', [
                 'products' => $products,
                 'companies' => $companies,
                 'keyword' => $keyword,
-                'companyId' => $companyId
+                'companyId' => $companyId,
+                'jougenprice' => $jougenprice,
+                'kagenprice' => $kagenprice,
+                'jougenstock' => $jougenstock,
+                'kagenstock' => $kagenstock
             ]);
         }
+        
     /**
      * Display the specified resource.
      *
@@ -162,15 +200,13 @@ class ProductController extends Controller
     {
         $products = Product::find($id);
         try {
-			DB::beginTransaction();
-			$products->delete();
-			DB::commit();
-		} catch (Throwable $e) {
-			DB::rollBack();
-		}
+            DB::beginTransaction();
+            $products->delete();
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+        }
         return redirect()->route('index');
     }
     
 }
-
-   
