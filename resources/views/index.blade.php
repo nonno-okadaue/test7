@@ -98,7 +98,7 @@
             <td style="text-align:center"><a class="btn btn-primary" href="{{ route('show',['id'=>$product->id]) }}">詳細表示</a></td>
             <td style="text-align:center">
 
-            <input data-product_id="{{$product->id}}" type="submit" class="btn btn-danger" value="削除">
+            <input data-product-id="{{$product->id}}" type="submit" class="btn btn-danger" value="削除">
             </form>
             </td>
             
