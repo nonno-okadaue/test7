@@ -34,3 +34,5 @@ Route::get('/products/edit/{id}', 'App\Http\Controllers\ProductController@edit')
 Route::put('/products/update/{id}', 'App\Http\Controllers\ProductController@update')->name('update');
 
 Route::post('/products/{id}/destroy', 'App\Http\Controllers\ProductController@destroy')->name('destroy');
+
+

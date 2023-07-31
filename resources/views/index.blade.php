@@ -97,31 +97,17 @@
             <td style="text-align:right">{{ $product->company->company_name}}</td>
             <td style="text-align:center"><a class="btn btn-primary" href="{{ route('show',['id'=>$product->id]) }}">詳細表示</a></td>
             <td style="text-align:center">
-            <form action="{{ route('destroy',$product->id) }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-danger" onclick='return confirm("削除しますか？");'>削除</button>
+
+            <input data-product_id="{{$product->id}}" type="submit" class="btn btn-danger" value="削除">
             </form>
             </td>
             
           </tr>
           @endforeach
           </table>
-          {!! $products->links('pagination::bootstrap-5') !!}
           
-          <script>
-            $(function() {
-            $("#search").click(function(){
-              $.ajax({
-              type:"GET",
-              url:"{{ route('index') }}",
-              })   
-              .done(function(){
-                alert('ajax成功');
-              })
-              .fail(function(){
-                alert('ajax失敗');
-              })
-            });
-          }); 
-          </script>
+          {!! $products->links('pagination::bootstrap-5') !!}
+
+                    
+
           @endsection
