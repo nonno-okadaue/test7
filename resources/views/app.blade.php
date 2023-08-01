@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.blue.min.css" integrity="sha512-jJ9r3lTLaH5XXa9ZOsCQU8kLvxdAVzyTWO/pnzdZrshJQfnw1oevJFpoyCDr7K1lqt1hUgqoxA5e2PctVtlSTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style type="text/css">
       body {
@@ -35,7 +37,6 @@
               var deleteConfirm = confirm('削除してよろしいでしょうか？');
               if(deleteConfirm == true) {
               var clickEle = $(this)
-              // 削除ボタンにユーザーIDをカスタムデータとして埋め込んでます。
               var productID = clickEle.attr('data-product-id');
 
               $.ajax({
@@ -76,6 +77,13 @@
               })
             });
           }); 
+
+
+
+
+          $(document).ready(function() { 
+          $("#myTable").tablesorter();
+        });
 
     </script>
   </body>

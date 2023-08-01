@@ -74,19 +74,21 @@
       </div>
 
       <div class="col-lg-12 mt-2">
-        <table class="table table-bordered">
-          <tr>
-            <th>ID</th>
-            <th>商品画像</th>
-            <th>商品名</th>
-            <th>価格</th>
-            <th>在庫数</th>
-            <th>メーカー名</th>
-            <th></th>
-            <th></th>
-          </tr>
+        <table class="table table-bordered tablesorter-blue" id="myTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>商品画像</th>
+              <th>商品名</th>
+              <th>価格</th>
+              <th>在庫数</th>
+              <th>メーカー名</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
 
-       
+          <tbody>
           @foreach($products as $product)
           <tr>
             <td style="text-align:right">{{ $product->id }}</td>
@@ -104,7 +106,8 @@
             
           </tr>
           @endforeach
-          </table>
+          </tbody>
+        </table>
           
           {!! $products->links('pagination::bootstrap-5') !!}
 
