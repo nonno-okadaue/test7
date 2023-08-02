@@ -33,6 +33,7 @@ Route::get('/products/show/{id}', 'App\Http\Controllers\ProductController@show')
 Route::get('/products/edit/{id}', 'App\Http\Controllers\ProductController@edit')->name('edit');
 Route::put('/products/update/{id}', 'App\Http\Controllers\ProductController@update')->name('update');
 
-Route::post('/products/{id}/destroy', 'App\Http\Controllers\ProductController@destroy')->name('destroy');
+Route::delete('/products/{id}/destroy', 'App\Http\Controllers\ProductController@destroy')->name('destroy');
+
 
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\SaleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::get('sale', 'App\Http\Controllers\SaleController@sale')->name('sale');
-Route::post('sale', 'App\Http\Controllers\SaleController@sale')->name('sale');
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+Route::get('sale', 'App\Http\Controllers\Api\SaleController@sale')->name('sale');
+Route::post('sale', 'App\Http\Controllers\Api\SaleController@sale')->name('sale');

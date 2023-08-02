@@ -85,6 +85,7 @@
               <th>メーカー名</th>
               <th></th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
 
@@ -98,12 +99,26 @@
             <td style="text-align:right">{{ $product->stock }}本</td>
             <td style="text-align:right">{{ $product->company->company_name}}</td>
             <td style="text-align:center"><a class="btn btn-primary" href="{{ route('show',['id'=>$product->id]) }}">詳細表示</a></td>
-            <td style="text-align:center">
 
-            <input data-product-id="{{$product->id}}" type="submit" class="btn btn-danger" value="削除">
+            <td style="text-align:center">
+            <form action="{{ route('sale')}}" method="POST">
+            @csrf 
+                        @if (0 < $product->stock)
+                            <input class="push-button btn-secondary" type="submit" value="購入">
+                        @else
+                            <input class="push-button-disabled btn-secondary" type="submit" value="在庫なし" disabled>
+                        @endif
             </form>
             </td>
-            
+           
+
+            <td style="text-align:center">
+            <form action="{{ route('destroy',$product->id) }}" method="POST">
+            @csrf 
+            @method("DELETE")
+            <button data-product-id="{{$product->id}}" type="submit" class="btn btn-danger">削除</button>
+            </form>
+                        
           </tr>
           @endforeach
           </tbody>
