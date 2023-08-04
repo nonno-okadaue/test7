@@ -24,7 +24,7 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Product', 'id');
     }
 
-    public function dec()
+    public function sale()
     {
     
     // 在庫を減らす処理

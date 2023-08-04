@@ -65,17 +65,12 @@ class Product extends Model
 
 
 
-
-        
-
         $product= $products->get();
 
         return $product;
       
           
         }
-    
-        
     
     
 
