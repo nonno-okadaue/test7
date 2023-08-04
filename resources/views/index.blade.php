@@ -101,7 +101,7 @@
             <td style="text-align:center"><a class="btn btn-primary" href="{{ route('show',['id'=>$product->id]) }}">詳細表示</a></td>
 
             <td style="text-align:center">
-            <form action="{{ route('sale')}}" method="POST">
+            <form action="{{ route('sale')}}" method="post">
             @csrf 
                         @if (0 < $product->stock)
                             <input class="push-button btn-secondary" type="submit" value="購入">

@@ -11,8 +11,9 @@ class Sale extends Model
 {
     use HasFactory;
     protected $table = 'sales';
-    protected $primaryKey = 'id';
+    protected $dates =  ['created_at', 'updated_at'];
     protected $fillable = [
+        'id',
         'product_id',
         'created_at',
         'updated_at'
@@ -23,6 +24,18 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Product', 'id');
     }
 
+    public function dec()
+    {
+    
+    // 在庫を減らす処理
+
+    $sales = DB::table('sales')
+    ->where('product_id')
+    ->join('products', 'sales.product_id', '=', 'products.id')
+    ->decrement('stock', 1);
+
+    return $sales;
+}
 
 }
 
