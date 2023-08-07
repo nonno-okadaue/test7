@@ -21,7 +21,7 @@ class Product extends Model
         'updated_at'
     ];
 
-    public function sale()
+    public function sales()
     {
         return $this->hasMany('App\Models\Sale');
     }

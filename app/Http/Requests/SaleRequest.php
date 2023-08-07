@@ -25,17 +25,9 @@ class SaleRequest extends FormRequest
      */
     public function rules()
     {
-        // お金が足りているかのチェック
-        $remain = function($attribute, $value, $fail) {
-            $stock = $this->all();
-            if ($stock['stock'] <= 0)
-            {
-                $fail('売り切れです。');
-            }
-        };
-        return [
-            'id'=>'required',
-        ];
+        // 在庫が足りているかのチェック
+        return true;
+
     }
 
 }

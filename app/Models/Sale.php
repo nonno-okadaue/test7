@@ -24,18 +24,20 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Product', 'id');
     }
 
-    public function sale()
+    public function dec()
     {
-    
+
     // 在庫を減らす処理
 
-    $sales = DB::table('sales')
+    $sale = DB::table('sales')
     ->where('product_id')
     ->join('products', 'sales.product_id', '=', 'products.id')
     ->decrement('stock', 1);
 
-    return $sales;
-}
+    return $sale;
+    //return response()->json('在庫がありません', 422, ['Content-Type' => 'application/json'], JSON_UNESCAPED_UNICODE);
 
 }
+}
+
 
