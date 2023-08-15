@@ -18,4 +18,5 @@ use App\Http\Controllers\Api\SaleController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::post('/sale', 'App\Http\Controllers\SaleController@sale')->name('sale');

@@ -24,20 +24,23 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Product', 'id');
     }
 
-    public function dec()
-    {
+    public function storeSale($request)
+    { 
+        $img = $request->file('img_path');
+        $path = $img->store('img','public');
+        DB::table('products') ->insert([
+         'product_name' =>$request->product_name, 
+         'company_id' => $request->company_id,
+         'price' => $request->price,
+         'stock' => $request->stock,
+         'comment' => $request->comment, 
+         'img_path' => $path,
+         
+        ]); } 
 
-    // 在庫を減らす処理
 
-    $sale = DB::table('sales')
-    ->where('product_id')
-    ->join('products', 'sales.product_id', '=', 'products.id')
-    ->decrement('stock', 1);
 
-    return $sale;
-    //return response()->json('在庫がありません', 422, ['Content-Type' => 'application/json'], JSON_UNESCAPED_UNICODE);
 
-}
 }
 
 

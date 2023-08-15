@@ -71,7 +71,14 @@ class Product extends Model
       
           
         }
+
+        public function isOutOfStock(){
+            return $this->stock <= 0;
+        }
     
+        public function reduceStock(){
+            $this->decrement("stock");
+        }
     
 
 }
