@@ -197,17 +197,13 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, Product $product)
     {
-        $products = Product::find($id);
-        try {
-            DB::beginTransaction();
-            $products->delete();
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
+        $products = Product::findOrFail($request->id);
+
+        $products->delete();
         }
-        return redirect()->route('index');
-    }
+        //return redirect()->route('index');
+
     
 }

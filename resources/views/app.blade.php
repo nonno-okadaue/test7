@@ -28,9 +28,11 @@
     </div>
 
     <script>
-         $.ajaxSetup({
-            headers: { 'X-CSRF-TOKEN': $("[name='csrf-token']").attr("content") },
-        })      
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          }
+      });
 
           $(function() {
             $('#search').click(function(){
@@ -45,45 +47,37 @@
                 alert('ajax失敗');
               })
             });
-          }); 
+          });
 
           $(function() {
           $('.btn-danger').on('click', function() {
-              var deleteConfirm = confirm('削除してよろしいでしょうか？');
+              var deleteConfirm = confirm("削除してよろしいでしょうか？");
 
               if(deleteConfirm == true) {
               var clickEle = $(this)
-              var productID = clickEle.attr('data-product-id');
+              var productID = clickEle.attr('data-product_id');
 
               $.ajax({
-              type:"GET",
-              url:'/products/{id}/destroy',
-              data: {'id': productID,
-               '_method': 'DELETE'} // DELETE リクエストだよ！と教えてあげる。
+              type:'POST',
+              url:'http://localhost:8888/test7/public/products/'+productID+'/destroy',
+              data: {'id':productID,
+                     '_method':'DELETE'} 
               })
               .done(function() {
-              // 通信が成功した場合、クリックした要素の親要素の <tr> を削除
-              clickEle.parents('tr').remove();
+                clickEle.parents('tr').remove();
               })
 
               .fail(function() {
-              alert('エラー');
-              });
+                  alert('ajax失敗');
+                })
 
-             
-            } else {
-            (function(e) {
-              e.preventDefault()
+              } else {
+                (function(e) {
+                  e.preventDefault()
+                });
+              };
             });
-          };
-        });
-      }); 
-
-
-
-          $(document).ready(function() { 
-          $("#myTable").tablesorter();
-        });
+          });
 
     </script>
   </body>

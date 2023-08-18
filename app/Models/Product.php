@@ -56,20 +56,16 @@ class Product extends Model
         ]); } 
         public function search($keyword,$companyId,$kagenprice,$jougenprice,$kagenstock,$jougenstock)
         {
-        // 検索処理
-        $products = DB::query();
+            // 検索処理
+            $products = DB::query();
 
-        $products= DB::table('products')
-        ->join('companies','company_id','=','companies.id')
-        ->select('products.price','companies.company_name');
+            $products= DB::table('products')
+            ->join('companies','company_id','=','companies.id')
+            ->select('products.price','companies.company_name');
 
+            $product= $products->get();
 
-
-        $product= $products->get();
-
-        return $product;
-      
-          
+            return $product;  
         }
 
         public function isOutOfStock(){
