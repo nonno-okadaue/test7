@@ -43,8 +43,5 @@ class Company extends Model
     {
         return $this->all();
     }
-
-
-
     
 }

@@ -33,6 +33,7 @@ class Product extends Model
 
     public function index() 
     {
+        
         return $this->paginate(5);
     }
 

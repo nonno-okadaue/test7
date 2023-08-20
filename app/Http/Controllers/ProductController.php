@@ -63,7 +63,7 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ProductRequest $request)
-    {//dd($request);
+    {
         $img = $request->file('img_path');
         try {
             DB::beginTransaction();
@@ -85,10 +85,9 @@ class ProductController extends Controller
         }
 
         
-        
         public function search(Request $request)
-        {//dd($request);
-            $keyword = $request->input('keyword'); 
+        {
+           $keyword = $request->input('keyword'); 
             $companyId = $request->input('companyId'); 
             $jougenprice = $request->input('jougenprice'); 
             $kagenprice = $request->input('kagenprice'); 
@@ -118,7 +117,6 @@ class ProductController extends Controller
                 $query->where('stock','>=',$kagenstock);
             }
     
-
             $products = $query->orderBy('company_id', 'asc')
             ->orderBy('price', 'asc')
             ->orderBy('stock', 'asc')
@@ -168,8 +166,8 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(ProductRequest $request, $id)
-        {//dd($request);
-            $product = Product::find($id);
+        {
+             $product = Product::find($id);
             try {
                 DB::beginTransaction();
                 if($request->hasFile('img_path')){
@@ -190,7 +188,6 @@ class ProductController extends Controller
         }
         
 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -203,7 +200,5 @@ class ProductController extends Controller
 
         $products->delete();
         }
-        //return redirect()->route('index');
-
     
 }
