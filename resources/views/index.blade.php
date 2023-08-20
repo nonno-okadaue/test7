@@ -20,14 +20,16 @@
 
               <div>
                 <label class="col-sm-auto col-form-label">キーワード</label>
-                  <div><input type="text" name="keyword" value="{{ $keyword }}"></div>
+                  <div><input type="text" name="keyword" value="{{ $keyword }}" onchange="this.form.submit()"></div>
               </div>
             
               <div>
                 <label class="col-sm-auto col-form-label">会社名</label>
                   <div>
-                    <select name="companyId" data-toggle="select" class="form-control" value=""></div>
-                    <option selected="selected" value="">指定なし</option>
+                    <select id="myselectbox" name="companyId" data-toggle="select" class="form-control" value="" onchange="this.form.submit()"></div>
+                    <option selected="selected" value=""> 
+                    指定なし
+                    </option>
                     @foreach ($companies as $id => $company_name)
                     <option value="{{ $id }}">{{ $company_name }}</option>
                     @endforeach
@@ -40,12 +42,12 @@
 
                 <div class="jougen">
                 <p>上限</p>
-                <input type="number" name="jougenprice" id="jougenprice" >
+                <input type="number" name="jougenprice" id="jougenprice" onchange="this.form.submit()">
                 </div>
 
                 <div class="kagen">
                 <p>下限</p>
-                <input type="number" name="kagenprice" id="kagenprice" >
+                <input type="number" name="kagenprice" id="kagenprice" onchange="this.form.submit()">
                 </div>
 
               </div>
@@ -55,12 +57,12 @@
 
                 <div class="jougen">
                 <p>上限</p>
-                <input type="number" name="jougenstock" id="jougenstock" >
+                <input type="number" name="jougenstock" id="jougenstock" onchange="this.form.submit()">
                 </div>
 
                 <div class="kagen">
                 <p>下限</p>
-                <input type="number" name="kagenstock" id="kagenstock" >
+                <input type="number" name="kagenstock" id="kagenstock" onchange="this.form.submit()">
                 </div>
 
               </div>
@@ -108,6 +110,9 @@
           </tbody>
         </table>
           
+
+        </script>
+
           {!! $products->links('pagination::bootstrap-5') !!}
 
                     
