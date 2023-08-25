@@ -34,11 +34,17 @@
           }
       });
 
+
+
           $(function() {
-            $('#search').click(function(){
+            $('#the-form').submit(function(event) {
+              event.preventDefault();
+              var $form = $(this);
+        
               $.ajax({
-              type:"GET",
-              url:"{{ route('index') }}",
+              url: $form.attr('action'),
+              type: $form.attr('method'),
+              data: $form.serialize(),
               })
               .done(function(){
                 alert('ajax成功');

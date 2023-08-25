@@ -14,7 +14,7 @@
       <!--検索フォーム-->
       <div class="search">
         <div class="col-sm">
-          <form method="get" action="{{ route('search')}}">
+          <form method="get" action="{{ route('search')}}" id="the-form">
             <!--入力-->
             <div class="form-group row">
 
@@ -42,12 +42,12 @@
 
                 <div class="jougen">
                 <p>上限</p>
-                <input type="number" name="jougenprice" id="jougenprice" onchange="this.form.submit()">
+                <input type="text" value="{{ $jougenprice }}" name="jougenprice" onchange="this.form.submit()">
                 </div>
 
                 <div class="kagen">
                 <p>下限</p>
-                <input type="number" name="kagenprice" id="kagenprice" onchange="this.form.submit()">
+                <input type="text" value="{{ $kagenprice }}" name="kagenprice" onchange="this.form.submit()">
                 </div>
 
               </div>
@@ -57,12 +57,12 @@
 
                 <div class="jougen">
                 <p>上限</p>
-                <input type="number" name="jougenstock" id="jougenstock" onchange="this.form.submit()">
+                <input type="text" value="{{ $jougenstock }}" name="jougenstock" onchange="this.form.submit()">
                 </div>
 
                 <div class="kagen">
                 <p>下限</p>
-                <input type="number" name="kagenstock" id="kagenstock" onchange="this.form.submit()">
+                <input type="text" value="{{ $kagenstock }}" name="kagenstock" onchange="this.form.submit()">
                 </div>
 
               </div>
@@ -88,7 +88,6 @@
               <th></th>
             </tr>
           </thead>
-
           <tbody>
           @foreach($products as $product)
           <tr>
@@ -110,8 +109,11 @@
           </tbody>
         </table>
           
-
-        </script>
+        <script>     
+          $(document).ready(function() { 
+            $("#myTable").tablesorter();
+            });
+        </script>  
 
           {!! $products->links('pagination::bootstrap-5') !!}
 
