@@ -35,7 +35,6 @@
       });
 
 
-
           $(function() {
             $('#the-form').submit(function(event) {
               event.preventDefault();
@@ -47,8 +46,8 @@
               data: $form.serialize(),
               datatype:'html'
               })
-              .done(function(){
-                $("#bar").html($(data).find('#hoge').text());
+              .done(function(data){
+                $("#myTable").html($(data).find('#myTable').html());
                 alert('ajax成功');
               })
               .fail(function(){

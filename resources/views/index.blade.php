@@ -20,13 +20,13 @@
 
               <div>
                 <label class="col-sm-auto col-form-label">キーワード</label>
-                  <div><input type="text" name="keyword" value="{{ $keyword }}" onchange="this.form.submit()"></div>
+                  <div><input type="text" name="keyword" value="{{ $keyword }}"></div>
               </div>
             
               <div>
                 <label class="col-sm-auto col-form-label">会社名</label>
                   <div>
-                    <select id="myselectbox" name="companyId" data-toggle="select" class="form-control" value="" onchange="this.form.submit()"></div>
+                    <select id="myselectbox" name="companyId" data-toggle="select" class="form-control" value=""></div>
                     <option selected="selected" value=""> 
                     指定なし
                     </option>
@@ -42,12 +42,12 @@
 
                 <div class="jougen">
                 <p>上限</p>
-                <input type="text" value="{{ $jougenprice }}" name="jougenprice" onchange="this.form.submit()">
+                <input type="text" value="{{ $jougenprice }}" name="jougenprice">
                 </div>
 
                 <div class="kagen">
                 <p>下限</p>
-                <input type="text" value="{{ $kagenprice }}" name="kagenprice" onchange="this.form.submit()">
+                <input type="text" value="{{ $kagenprice }}" name="kagenprice">
                 </div>
 
               </div>
@@ -57,12 +57,12 @@
 
                 <div class="jougen">
                 <p>上限</p>
-                <input type="text" value="{{ $jougenstock }}" name="jougenstock" onchange="this.form.submit()">
+                <input type="text" value="{{ $jougenstock }}" name="jougenstock">
                 </div>
 
                 <div class="kagen">
                 <p>下限</p>
-                <input type="text" value="{{ $kagenstock }}" name="kagenstock" onchange="this.form.submit()">
+                <input type="text" value="{{ $kagenstock }}" name="kagenstock">
                 </div>
 
               </div>
@@ -75,7 +75,6 @@
         </div>
       </div>
 
-      <div id="bar">
         <table class="table table-bordered tablesorter-blue" id="myTable">
           <thead>
             <tr>
@@ -109,8 +108,7 @@
           @endforeach
           </tbody>
         </table>
-        </div>
-          
+
         <script>     
           $(document).ready(function() { 
             $("#myTable").tablesorter();
