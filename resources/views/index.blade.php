@@ -75,6 +75,7 @@
         </div>
       </div>
 
+      <div id="bar">
         <table class="table table-bordered tablesorter-blue" id="myTable">
           <thead>
             <tr>
@@ -108,6 +109,7 @@
           @endforeach
           </tbody>
         </table>
+        </div>
           
         <script>     
           $(document).ready(function() { 

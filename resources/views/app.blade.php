@@ -45,8 +45,10 @@
               url: $form.attr('action'),
               type: $form.attr('method'),
               data: $form.serialize(),
+              datatype:'html'
               })
               .done(function(){
+                $("#bar").html($(data).find('#hoge').text());
                 alert('ajax成功');
               })
               .fail(function(){
